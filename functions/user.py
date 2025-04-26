@@ -69,5 +69,5 @@ def gestionar_perfil(usuario):
         perfil['correo'] = correo
         
         print("El perfil ha sido actualizado exitosamente.")
-    }
+    
 
