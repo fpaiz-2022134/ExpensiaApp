@@ -1,4 +1,4 @@
-from ..data import program_data
+from data import program_data
 
 
 
@@ -29,7 +29,9 @@ def iniciar_sesion():
     print("\n--- Inicio de sesión ---")
     usuario = input("Nombre de usuario: ")
     contraseña = input("Contraseña: ")
-    if usuario in program_data.usuarios and program_data.usuarios[usuario] == contraseña:
+    if usuario in program_data.usuarios and program_data.usuarios[usuario]['contraseña']== contraseña:
         print("¡Inicio de sesión exitoso!")
+        return usuario
     else:
         print("Usuario o contraseña incorrectos.")
+        return None

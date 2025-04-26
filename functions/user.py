@@ -1,6 +1,6 @@
 from datetime import date
 
-from ..data.program_data import usuarios, facturas_pendientes
+from data.program_data import usuarios, facturas_pendientes
 
 
 
@@ -24,7 +24,7 @@ def enviar_factura(usuario):
 
     numero_factura = input("Número de factura: ")
     proveedor = input("Nombre del proveedor: ")
-    fecha_emision = date.now
+    fecha_emision = date.day
     monto = input("Monto: ")
     moneda_utilizada = ("Moneda utilizada (Q): ")
     categoria = input('Ingresa la categoría del gasto realizado (comida, transporte, etc) : ')
@@ -44,15 +44,15 @@ def enviar_factura(usuario):
         'aprobada': None
     }
     
-    usuarios[usuario].append(factura)
+    usuarios[usuario]['facturas'].append(factura)
     facturas_pendientes.append(factura)
     
     print("La factura fue enviada al administrador exitosamente.")
     
     
 def ver_saldo(usuario):
-    saldo = usuarios[usuario]('saldo')
-    print( f"\nSaldo disponible: Q{saldo:.2}")
+    saldo = usuarios[usuario]['saldo']
+    print( f"\nSaldo disponible: Q{saldo:.2f}")
     
     
 def gestionar_perfil(usuario):
@@ -60,7 +60,7 @@ def gestionar_perfil(usuario):
     perfil =usuarios[usuario]['perfil']
     
     continuar = input("\n¿Deseas editar los campos de tu perfil? (s/n): ")
-    if continuar.lower() != "s":
+    if continuar.lower() != "n":
         perfil = usuarios[usuario]['perfil'] 
         nombre = input("Nombre completo: ")
         correo = input("Correo electrónico : " )
