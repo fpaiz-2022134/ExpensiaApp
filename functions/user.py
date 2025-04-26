@@ -1,17 +1,19 @@
 from datetime import date
+
 from ..data.program_data import usuarios, facturas_pendientes
+
 
 
 def menu_usuario():
     print("         EXPENSIA         ")
     
     
+
 def mostrar_dashboard(usuario):
     print("------ FACTURAS ENVIADAS ----")
     print()
     for factura in usuarios[usuario]['facturas']:
         print(f"Categoría: {factura['categoria']}, Monto: {factura['monto']}, Aprobada: {factura['aprobada']}")
-        
         
 
 
@@ -19,6 +21,7 @@ def enviar_factura(usuario):
     print(" ---- ENVIAR FACTURA")
     print("A countinuación, deberás ingresar distintos datos para un envío correcto..")
     print()
+
     numero_factura = input("Número de factura: ")
     proveedor = input("Nombre del proveedor: ")
     fecha_emision = date.now
@@ -26,6 +29,7 @@ def enviar_factura(usuario):
     moneda_utilizada = ("Moneda utilizada (Q): ")
     categoria = input('Ingresa la categoría del gasto realizado (comida, transporte, etc) : ')
     descripcion = input("Justifica tu respuesta anterior, describe el gasto realizado:")
+
     print("")
     
     factura = {
@@ -65,4 +69,5 @@ def gestionar_perfil(usuario):
         perfil['correo'] = correo
         
         print("El perfil ha sido actualizado exitosamente.")
-        
+    }
+

@@ -1,6 +1,6 @@
-from modules import login as log
+from .authentication import login as log
 
-#Elegir la opcion
+#Elegir la opción
 while True:
     opcion = log.menu_login()
     if opcion == "1":
