@@ -37,4 +37,4 @@ EXPENSIA es la solución ideal porque:
 
 1. Clonar el repositorio
 2. Instalar los requisitos (si aplica)
-3. Ejecutar el programa desde consola o con extension Python en Visual Studio Code
+3. Ejecutar el programa desde consola o con extension Python en Visual Studio Code.
