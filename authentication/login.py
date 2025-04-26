@@ -1,11 +1,8 @@
 from ..data import program_data
 
-def menu_login():
-    print("¡Bienvenido a la mejor aplicacion de viaticos de Guatemala!")
-    print("1. Iniciar sesión")
-    print("2. Registrarse")
-    opcion = input("Eliga una de las siguientes opciónes (1 o 2): ")
-    return opcion
+
+
+
 #Registrar usuario
 def registrar_usuario():
     print("\n--- Registro ---")
@@ -27,7 +24,7 @@ def registrar_usuario():
             'saldo': 00
         }
         print("¡Registro exitoso!")
-#Inicio de Sesion
+#Inicio de Sesión
 def iniciar_sesion():
     print("\n--- Inicio de sesión ---")
     usuario = input("Nombre de usuario: ")
