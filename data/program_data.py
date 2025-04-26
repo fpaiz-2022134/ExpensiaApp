@@ -1,0 +1,2 @@
+usuarios = {}
+facturas_pendientes = []
