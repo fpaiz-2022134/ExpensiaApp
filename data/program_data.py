@@ -6,3 +6,4 @@ facturas_pendientes = []
 
 #si el valor es texto, devolver texto
 #si es númerico, devolver númerico
+
