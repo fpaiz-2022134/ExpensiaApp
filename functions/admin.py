@@ -1,4 +1,4 @@
-from ..data.program_data import facturas_pendientes, usuarios
+from data.program_data import facturas_pendientes, usuarios
 
 def ver_facturas_pendientes():
     print("\n --- Facturas Pendientes ---")

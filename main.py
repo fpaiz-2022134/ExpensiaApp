@@ -1,14 +1,16 @@
-from .authentication import login as log
-from .authentication.login import *
-from .functions.user import *
-from .functions.admin import *
+
+from authentication.login import iniciar_sesion, registrar_usuario
+from functions.user import mostrar_dashboard, enviar_factura, ver_saldo, gestionar_perfil
+from functions.admin import ver_facturas_pendientes, aprobar_facturas
+from data.program_data import usuarios, validar_numero
 
 
 def mostrar_menu():
     print("¡Bienvenido a la mejor aplicacion de viaticos de Guatemala!")
     print("1. Iniciar sesión")
     print("2. Registrarse")
-    return int(input("Elige una opción: "))
+    print("3. Salir del programa") 
+    return validar_numero(input("Elige una opción: "))
 
 
 while True:
@@ -18,14 +20,12 @@ while True:
     if opcion == 1:
         usuario = iniciar_sesion()
 
-        if usuario:
-            from data import usuarios
-            
+        if usuario:            
             if usuarios[usuario]['rol'] == 'usuario':
                 while True:
                     print("\n1. Ver dashboard\n2. Enviar factura\n3. Ver saldo\n4. Gestionar perfil\n5. Cerrar sesión")
                     
-                    op = int(input("Opción: "))
+                    op = validar_numero(input("Opción: "))
                     
                     if op == 1:
                         mostrar_dashboard(usuario)
@@ -43,7 +43,7 @@ while True:
             else:
                 while True:
                     print("\n 1. Ver las facturas pendientes \n 2.Procesar factura \n 3. Cerrar sesión")
-                    op = int(input("Opción: "))
+                    op = int(validar_numero(input("Opción: ")))
                     
                     if op == 1:
                         ver_facturas_pendientes()
@@ -57,5 +57,8 @@ while True:
                         
     elif opcion == 2:
         registrar_usuario()
+        
+    elif opcion == 3:
+        break
     else:
         print(print("La opción escogida es incorrecta, vuelve a intentarlo."))
