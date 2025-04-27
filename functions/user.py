@@ -36,8 +36,11 @@ def enviar_factura(usuario):
     while True:
         monto = input("Monto: ")
         if validar_numero(monto):
-            monto = float(monto)
-            break
+            if float(monto) > 0:
+                monto = float(monto)
+                break
+            else:
+                print("El monto debe ser un número positivo mayor a cero. Intenta otra vez.")
         else:
             print("El monto debe ser un número válido. Intenta de nuevo.")
 
