@@ -1,6 +1,6 @@
 from datetime import date
 
-from data.program_data import usuarios, facturas_pendientes
+from ..data.program_data import usuarios, facturas_pendientes
 
 
 
@@ -18,17 +18,32 @@ def mostrar_dashboard(usuario):
 
 
 def enviar_factura(usuario):
-    print(" ---- ENVIAR FACTURA")
-    print("A countinuación, deberás ingresar distintos datos para un envío correcto..")
+    print("---- ENVIAR FACTURA")
+    print("A continuación, deberás ingresar distintos datos para un envío correcto...")
     print()
 
-    numero_factura = input("Número de factura: ")
+    while True:
+        numero_factura = input("Número de factura: ")
+        if program_data.es_entero(numero_factura):
+            numero_factura = int(numero_factura)
+            break
+        else:
+            print("El número de factura debe ser un número entero. Intenta de nuevo.")
+
     proveedor = input("Nombre del proveedor: ")
     fecha_emision = date.day
-    monto = input("Monto: ")
-    moneda_utilizada = ("Moneda utilizada (Q): ")
-    categoria = input('Ingresa la categoría del gasto realizado (comida, transporte, etc) : ')
-    descripcion = input("Justifica tu respuesta anterior, describe el gasto realizado:")
+
+    while True:
+        monto = input("Monto: ")
+        if program_data.es_numero(monto):
+            monto = float(monto)
+            break
+        else:
+            print("El monto debe ser un número válido. Intenta de nuevo.")
+
+    moneda_utilizada = input("Moneda utilizada (Q): ")
+    categoria = input("Ingresa la categoría del gasto realizado (comida, transporte, etc): ")
+    descripcion = input("Justifica tu respuesta anterior, describe el gasto realizado: ")
 
     print("")
     
@@ -44,15 +59,15 @@ def enviar_factura(usuario):
         'aprobada': None
     }
     
-    usuarios[usuario]['facturas'].append(factura)
+    usuarios[usuario].append(factura)
     facturas_pendientes.append(factura)
     
     print("La factura fue enviada al administrador exitosamente.")
     
     
 def ver_saldo(usuario):
-    saldo = usuarios[usuario]['saldo']
-    print( f"\nSaldo disponible: Q{saldo:.2f}")
+    saldo = usuarios[usuario]('saldo')
+    print( f"\nSaldo disponible: Q{saldo:.2}")
     
     
 def gestionar_perfil(usuario):
@@ -60,7 +75,7 @@ def gestionar_perfil(usuario):
     perfil =usuarios[usuario]['perfil']
     
     continuar = input("\n¿Deseas editar los campos de tu perfil? (s/n): ")
-    if continuar.lower() != "n":
+    if continuar.lower() != "s":
         perfil = usuarios[usuario]['perfil'] 
         nombre = input("Nombre completo: ")
         correo = input("Correo electrónico : " )
