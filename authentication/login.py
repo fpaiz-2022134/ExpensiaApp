@@ -36,3 +36,27 @@ def iniciar_sesion():
         print("¡Inicio de sesión exitoso!")
     else:
         print("Usuario o contraseña incorrectos.")
+
+#Bloqueo de usuario si se intentan mas de 5 veces
+intentos_fallidos = 0
+max_intentos = 5
+
+def iniciar_sesion():
+    global intentos_fallidos
+    print("\n--- Inicio de sesión ---")
+    if intentos_fallidos >= max_intentos:
+        print("Demasiados intentos fallidos. Contacta a un administrador o IT.")
+        return
+
+    usuario = input("Nombre de usuario: ")
+    contraseña = input("Contraseña: ")
+    if usuario in usuarios and usuarios[usuario] == contraseña:
+        print("¡Inicio de sesión exitoso!")
+        intentos_fallidos = 0  # Reinicia los intentos después de un inicio exitoso
+    else:
+        print("Usuario o contraseña incorrectos.")
+        intentos_fallidos += 1
+        print(f"Intentos fallidos: {intentos_fallidos}/{max_intentos}")
+        if intentos_fallidos >= max_intentos:
+            print("\nHas excedido el número de intentos permitidos.")
+            print("Debes contactar a un administrador o IT para desbloquear tu cuenta.")
