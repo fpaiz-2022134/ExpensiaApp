@@ -12,15 +12,17 @@ def aprobar_facturas():
     
     if 0 <= idx < len(facturas_pendientes):
         factura = facturas_pendientes[idx]
-        decision = input("¿Deseas aprobar esta factura? s/n").lower()
+        decision = input("¿Deseas aprobar esta factura? s/n: ").lower()
         
         factura['aprobada'] = True if decision == 's' else False
         
         if factura['aprobada']:
             usuarios[factura['usuario']]['saldo'] = factura['monto']
-            
-        print("La factura ha sido aprobada exitosamente.")
-        print("Importante: Al usuario se le ha agregado el monto a su saldo.") 
+            print("La factura ha sido aprobada exitosamente.")
+            print("Importante: Al usuario se le ha agregado el monto a su saldo.") 
+        else:
+            print("La factura ha sido denegada, no se le ha sumado saldo al usuario.")
+        
         
         facturas_pendientes.pop(idx)           
     
