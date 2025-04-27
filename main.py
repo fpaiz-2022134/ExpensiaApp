@@ -6,11 +6,12 @@ from data.program_data import usuarios, validar_numero
 
 
 def mostrar_menu():
+    print("             EXPENSIA        ")
     print("¡Bienvenido a la mejor aplicacion de viaticos de Guatemala!")
     print("1. Iniciar sesión")
     print("2. Registrarse")
     print("3. Salir del programa") 
-    return validar_numero(input("Elige una opción: "))
+    return int(validar_numero(input("Elige una opción: ")))
 
 
 while True:
@@ -25,7 +26,7 @@ while True:
                 while True:
                     print("\n1. Ver dashboard\n2. Enviar factura\n3. Ver saldo\n4. Gestionar perfil\n5. Cerrar sesión")
                     
-                    op = validar_numero(input("Opción: "))
+                    op = int(validar_numero(input("Opción: ")))
                     
                     if op == 1:
                         mostrar_dashboard(usuario)

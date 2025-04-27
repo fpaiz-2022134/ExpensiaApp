@@ -17,7 +17,7 @@ def validar_texto(entrada):
     
 def validar_numero(entrada):
     if entrada.isdigit():
-        return int(entrada)
+        return entrada
     else:
         print("Entrada inválida: solo se permiten números.")
         return None
