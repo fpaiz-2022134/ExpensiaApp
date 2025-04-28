@@ -36,11 +36,8 @@ def enviar_factura(usuario):
     while True:
         monto = input("Monto: ")
         if validar_numero(monto):
-            if float(monto) > 0:
-                monto = float(monto)
-                break
-            else:
-                print("El monto debe ser un número positivo mayor a cero. Intenta otra vez.")
+            monto = float(monto)
+            break
         else:
             print("El monto debe ser un número válido. Intenta de nuevo.")
 
@@ -78,7 +75,7 @@ def gestionar_perfil(usuario):
     perfil =usuarios[usuario]['perfil']
     
     continuar = input("\n¿Deseas editar los campos de tu perfil? (s/n): ")
-    if continuar.lower() != "s":
+    if continuar.lower() == "s":
         perfil = usuarios[usuario]['perfil'] 
         nombre = input("Nombre completo: ")
         correo = input("Correo electrónico : " )

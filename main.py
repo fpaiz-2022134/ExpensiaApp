@@ -11,7 +11,8 @@ def mostrar_menu():
     print("1. Iniciar sesión")
     print("2. Registrarse")
     print("3. Salir del programa") 
-    return int(validar_numero(input("Elige una opción: ")))
+    
+    return (validar_numero(input("Elige una opción: ")))
 
 
 while True:
@@ -26,7 +27,7 @@ while True:
                 while True:
                     print("\n1. Ver dashboard\n2. Enviar factura\n3. Ver saldo\n4. Gestionar perfil\n5. Cerrar sesión")
                     
-                    op = int(validar_numero(input("Opción: ")))
+                    op = validar_numero(input("Opción: "))
                     
                     if op == 1:
                         mostrar_dashboard(usuario)
@@ -44,7 +45,7 @@ while True:
             else:
                 while True:
                     print("\n 1. Ver las facturas pendientes \n 2.Procesar factura \n 3. Cerrar sesión")
-                    op = int(validar_numero(input("Opción: ")))
+                    op = validar_numero(input("Opción: "))
                     
                     if op == 1:
                         ver_facturas_pendientes()
