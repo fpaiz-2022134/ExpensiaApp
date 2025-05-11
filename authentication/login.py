@@ -1,4 +1,4 @@
-from ..data import program_data
+from data import program_data
 
 def menu_login():
     print("¡Bienvenido a la mejor aplicacion de viaticos de Guatemala!")
@@ -7,12 +7,6 @@ def menu_login():
     opcion = input("Eliga una de las siguientes opciónes (1 o 2): ")
     return opcion
 
-def menu_login():
-    print("¡Bienvenido a la mejor aplicacion de viaticos de Guatemala!")
-    print("1. Iniciar sesión")
-    print("2. Registrarse")
-    opcion = input("Eliga una de las siguientes opciónes (1 o 2): ")
-    return opcion
 #Registrar usuario
 def registrar_usuario():
     print("\n--- Registro ---")
@@ -41,19 +35,10 @@ def registrar_usuario():
             'rol': rol,
             'perfil': {},
             'facturas': [],
-            'saldo': 0
+            'saldo': 00
         }
         print("¡Registro exitoso!")
 
-#Inicio de Sesion
-def iniciar_sesion():
-    print("\n--- Inicio de sesión ---")
-    usuario = input("Nombre de usuario: ")
-    contraseña = input("Contraseña: ")
-    if usuario in program_data.usuarios and program_data.usuarios[usuario] == contraseña:
-        print("¡Inicio de sesión exitoso!")
-    else:
-        print("Usuario o contraseña incorrectos.")
 
 #Bloqueo de usuario si se intentan mas de 5 veces
 intentos_fallidos = 0
@@ -64,8 +49,6 @@ def iniciar_sesion():
     print("\n--- Inicio de sesión ---")
     
     """ if intentos_fallidos >= max_intentos:
-    
-    if intentos_fallidos >= max_intentos:
         print("Demasiados intentos fallidos. Contacta a un administrador o IT.")
         return """
 
@@ -77,20 +60,6 @@ def iniciar_sesion():
             print("¡Inicio de sesión exitoso!")
             intentos_fallidos = 0
             return usuario
-        else:
-            print("Usuario o contraseña incorrectos.")
-            intentos_fallidos += 1
-            print(f"Intentos fallidos: {intentos_fallidos}/{max_intentos}")
-            if intentos_fallidos >= max_intentos:
-                print("\nHas excedido el número de intentos permitidos.")
-                print("Debes contactar a un administrador o IT para desbloquear tu cuenta.")
-                break
-
-    while intentos_fallidos < max_intentos:
-        contraseña = input("Contraseña: ")
-        if usuario in usuarios and usuarios[usuario] == contraseña:
-            print("¡Inicio de sesión exitoso!")
-            intentos_fallidos = 0
         else:
             print("Usuario o contraseña incorrectos.")
             intentos_fallidos += 1

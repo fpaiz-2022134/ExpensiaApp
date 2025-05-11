@@ -1,7 +1,4 @@
 from datetime import date
-from data.program_data import usuarios, facturas_pendientes, validar_numero
-import csv
-import os
 
 from data.program_data import usuarios, facturas_pendientes, validar_numero
 
@@ -9,14 +6,17 @@ from data.program_data import usuarios, facturas_pendientes, validar_numero
 
 def menu_usuario():
     print("         EXPENSIA         ")
+    
+    
 
-# Muestra el dashboard del usuario
 def mostrar_dashboard(usuario):
-    print("------ FACTURAS ENVIADAS ----\n")
+    print("------ FACTURAS ENVIADAS ----")
+    print()
     for factura in usuarios[usuario]['facturas']:
         print(f"Categoría: {factura['categoria']}, Monto: {factura['monto']}, Aprobada: {factura['aprobada']}")
+        
 
-# Permite al usuario enviar una factura
+
 def enviar_factura(usuario):
     print("---- ENVIAR FACTURA")
     print("A continuación, deberás ingresar distintos datos para un envío correcto...")
@@ -46,7 +46,7 @@ def enviar_factura(usuario):
     descripcion = input("Justifica tu respuesta anterior, describe el gasto realizado: ")
 
     print("")
-
+    
     factura = {
         'usuario': usuario,
         'numero_factura': numero_factura,
@@ -61,24 +61,26 @@ def enviar_factura(usuario):
     
     usuarios[usuario]['facturas'].append(factura)
     facturas_pendientes.append(factura)
-
+    
     print("La factura fue enviada al administrador exitosamente.")
-
-# Muestra el saldo disponible del usuario
+    
+    
 def ver_saldo(usuario):
     saldo = usuarios[usuario]['saldo']
     print( f"\nSaldo disponible: Q{saldo:.2f}")
     
     
 def gestionar_perfil(usuario):
-    print("\n--- Perfil de Usuario ---")
-    perfil = usuarios[usuario]['perfil']
-
+    print("\n ---    Perfil de Usuario -----" )
+    perfil =usuarios[usuario]['perfil']
+    
     continuar = input("\n¿Deseas editar los campos de tu perfil? (s/n): ")
     if continuar.lower() == "s":
         perfil = usuarios[usuario]['perfil'] 
         nombre = input("Nombre completo: ")
-        correo = input("Correo electrónico: ")
+        correo = input("Correo electrónico : " )
+        
         perfil['nombre'] = nombre
         perfil['correo'] = correo
+        
         print("El perfil ha sido actualizado exitosamente.")
