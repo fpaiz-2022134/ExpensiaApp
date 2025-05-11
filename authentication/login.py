@@ -1,4 +1,5 @@
 from data import program_data
+from data.data_handler import guardar_usuarios  
 
 def menu_login():
     print("¡Bienvenido a la mejor aplicacion de viaticos de Guatemala!")
@@ -37,6 +38,7 @@ def registrar_usuario():
             'facturas': [],
             'saldo': 00
         }
+        guardar_usuarios()
         print("¡Registro exitoso!")
 
 
