@@ -1,0 +1,3 @@
+usuario,numero_factura,proveedor,fecha_emision,monto,moneda_utilizada,categoria,descripcion,aprobada
+Edgar,111,expensia,2025-05-11,100.0,Q,transporte,pago bus,
+Edgar,222,MCdonalds,2025-05-11,45.0,q,Pago almuerzo,almuerzo,

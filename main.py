@@ -2,7 +2,9 @@ from authentication.login import iniciar_sesion, registrar_usuario
 from functions.user import mostrar_dashboard, enviar_factura, ver_saldo, gestionar_perfil
 from functions.admin import ver_facturas_pendientes, aprobar_facturas
 from data.program_data import usuarios, validar_numero
+from data.data_handler import cargar_datos, guardar_usuarios, guardar_facturas
 
+cargar_datos()
 
 def mostrar_menu():
     print("             EXPENSIA        ")

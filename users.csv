@@ -1,0 +1,2 @@
+usuario,contraseña,rol,perfil,facturas,saldo
+Edgar,0000,usuario,{},"[{'usuario': 'Edgar', 'numero_factura': 111, 'proveedor': 'expensia', 'fecha_emision': '2025-05-11', 'monto': 100.0, 'moneda_utilizada': 'Q', 'categoria': 'transporte', 'descripcion': 'pago bus', 'aprobada': None}, {'usuario': 'Edgar', 'numero_factura': 222, 'proveedor': 'MCdonalds', 'fecha_emision': '2025-05-11', 'monto': 45.0, 'moneda_utilizada': 'q', 'categoria': 'Pago almuerzo', 'descripcion': 'almuerzo', 'aprobada': None}]",0

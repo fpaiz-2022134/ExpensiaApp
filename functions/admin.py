@@ -1,4 +1,5 @@
 from data.program_data import facturas_pendientes, usuarios
+from data.data_handler import guardar_usuarios, guardar_facturas
 
 def ver_facturas_pendientes():
     print("\n --- Facturas Pendientes ---")
@@ -29,4 +30,30 @@ def aprobar_facturas():
     else:
         print("La factura escogida es inválida o no se encuentra registrada.")
         
+        # Función para aprobar facturas
+def aprobar_facturas():
+    ver_facturas_pendientes()
+    idx = int(input("¿Qué factura deseas procesar? Ingresa el número: ")) - 1
+    
+    if 0 <= idx < len(facturas_pendientes):
+        factura = facturas_pendientes[idx]
+        decision = input("¿Deseas aprobar esta factura? s/n: ").lower()
         
+        factura['aprobada'] = True if decision == 's' else False
+        
+        if factura['aprobada']:
+            # Agregar la fecha de aprobación
+            factura['fecha_aprobacion'] = date.today().isoformat()
+            # Actualizar el saldo del usuario
+            usuarios[factura['usuario']]['saldo'] += factura['monto']
+            print(f"La factura ha sido aprobada exitosamente. Fecha de aprobación: {factura['fecha_aprobacion']}")
+            print("Importante: Al usuario se le ha agregado el monto a su saldo.") 
+        else:
+            print("La factura ha sido denegada, no se le ha sumado saldo al usuario.")
+        guardar_usuarios()
+        guardar_facturas()
+        # Eliminar la factura aprobada de la lista de pendientes
+        facturas_pendientes.pop(idx)           
+    
+    else:
+        print("La factura escogida es inválida o no se encuentra registrada.")
