@@ -1,6 +1,16 @@
 from authentication.login import iniciar_sesion, registrar_usuario
-from functions.user import mostrar_dashboard, enviar_factura, ver_saldo, gestionar_perfil
-from functions.admin import ver_facturas_pendientes, aprobar_facturas
+from functions.user import (
+    mostrar_dashboard,
+    enviar_factura,
+    ver_saldo,
+    gestionar_perfil,
+    buscar_facturas_interactivo as buscar_facturas_usuario
+)
+from functions.admin import (
+    ver_facturas_pendientes,
+    aprobar_facturas,
+    buscar_facturas_interactivo_admin
+)
 from data.program_data import usuarios, validar_numero
 from data.data_handler import cargar_datos, guardar_usuarios, guardar_facturas
 
@@ -8,17 +18,15 @@ cargar_datos()
 
 def mostrar_menu():
     print("             EXPENSIA        ")
-    print("¡Bienvenido a la mejor aplicacion de viaticos de Guatemala!")
+    print("¡Bienvenido a la mejor aplicación de viáticos de Guatemala!")
     print("1. Iniciar sesión")
     print("2. Registrarse")
     print("3. Salir del programa") 
     
-    return (validar_numero(input("Elige una opción: ")))
-
+    return validar_numero(input("Elige una opción: "))
 
 while True:
     opcion = mostrar_menu()
-    
     
     if opcion == 1:
         usuario = iniciar_sesion()
@@ -26,9 +34,14 @@ while True:
         if usuario:            
             if usuarios[usuario]['rol'] == 'usuario':
                 while True:
-                    print("\n1. Ver dashboard\n2. Enviar factura\n3. Ver saldo\n4. Gestionar perfil\n5. Cerrar sesión")
+                    print("\n1. Ver dashboard")
+                    print("2. Enviar factura")
+                    print("3. Ver saldo")
+                    print("4. Gestionar perfil")
+                    print("5. Buscar factura")
+                    print("6. Cerrar sesión")
                     
-                    op = validar_numero(input("Opción: "))
+                    op = validar_numero(input("Elige una opción: "))
                     
                     if op == 1:
                         mostrar_dashboard(usuario)
@@ -39,20 +52,28 @@ while True:
                     elif op == 4:
                         gestionar_perfil(usuario)
                     elif op == 5:
+                        buscar_facturas_usuario(usuario)
+                    elif op == 6:
                         print("¡Gracias por usar el programa!")
                         break
                     else:
                         print("La opción escogida es incorrecta, vuelve a intentarlo.")
-            else:
+            else:  # Admin
                 while True:
-                    print("\n 1. Ver las facturas pendientes \n 2.Procesar factura \n 3. Cerrar sesión")
-                    op = validar_numero(input("Opción: "))
+                    print("\n1. Ver las facturas pendientes")
+                    print("2. Procesar factura")
+                    print("3. Buscar factura")
+                    print("4. Cerrar sesión")
+
+                    op = validar_numero(input("Elige una opción: "))
                     
                     if op == 1:
                         ver_facturas_pendientes()
-                    elif op== 2:
+                    elif op == 2:
                         aprobar_facturas()
                     elif op == 3:
+                        buscar_facturas_interactivo_admin()
+                    elif op == 4:
                         print("¡Gracias por usar el programa!")
                         break
                     else:
@@ -64,4 +85,4 @@ while True:
     elif opcion == 3:
         break
     else:
-        print(print("La opción escogida es incorrecta, vuelve a intentarlo."))
+        print("La opción escogida es incorrecta, vuelve a intentarlo.")

@@ -1,6 +1,7 @@
 from datetime import date
 from data.program_data import usuarios, facturas_pendientes, validar_numero
 from data.data_handler import guardar_usuarios, guardar_facturas
+import pandas as pd
 
 # Menú principal para el usuario
 def menu_usuario():
@@ -83,7 +84,7 @@ def gestionar_perfil(usuario):
 # ------------------------------
 
 # Función para calcular el promedio de saldo de todos los usuarios
-def calcular_promedio_saldo():
+""" def calcular_promedio_saldo():
     total_saldo = 0
     num_usuarios = len(usuarios)
 
@@ -98,4 +99,72 @@ def calcular_promedio_saldo():
     print(f"\nEl promedio de saldo de todos los usuarios es: Q{promedio:.2f}")
 
     # Calcular el promedio de saldo de todos los usuarios
-    calcular_promedio_saldo()
+    calcular_promedio_saldo() """
+
+# ------------------------------
+#    FUNCION PARA BUSCAR FACTURAS
+# ------------------------------
+def buscar_facturas(criterio, valor, usuario_actual):
+    try:
+        df = pd.read_csv('bills.csv')
+
+        if criterio not in df.columns:
+            print(f"Criterio '{criterio}' no encontrado en las columnas.")
+            return []
+
+        # Filtramos solo las facturas del usuario actual
+        df_filtrado = df[df['usuario'].astype(str).str.lower() == usuario_actual.lower()]
+
+        # Filtrar por el criterio elegido
+        coincidencias = df_filtrado[df_filtrado[criterio].astype(str).str.lower() == str(valor).lower()]
+
+        return coincidencias.to_dict('records')
+
+    except FileNotFoundError:
+        print("El archivo 'bills.csv' no existe.")
+        return []
+
+    except Exception as e:
+        print(f"Error al buscar facturas: {e}")
+        return []
+
+def buscar_facturas_interactivo(usuario_actual):
+    while True:
+        print("\n------ Buscar Factura ------")
+        print("Seleccione un criterio de búsqueda:")
+        print("1. Número de factura")
+        print("2. Estado (aprobado, rechazado, pendiente)")
+        print("3. Volver al menú principal")
+        
+        opcion = input("Opción: ").strip()
+
+        if opcion == '1':
+            criterio = 'numero_factura'
+            valor = input("Ingrese el número de factura: ").strip()
+        
+        elif opcion == '2':
+            criterio = 'estado'
+            valor = input("Ingrese el estado (aprobado, rechazado, pendiente): ").strip().lower()
+            if valor not in ['aprobado', 'rechazado', 'pendiente']:
+                print("Estado no válido. Intente con 'aprobado', 'rechazado' o 'pendiente'.")
+                continue
+
+        elif opcion == '3':
+            print("Regresando al menú principal...")
+            break
+
+        else:
+            print("Opción no válida. Intente de nuevo.")
+            continue
+
+        # Buscar y mostrar resultados
+        resultados = buscar_facturas(criterio, valor, usuario_actual)
+        if resultados:
+            print(f"\nSe encontraron {len(resultados)} factura(s):\n")
+            for idx, factura in enumerate(resultados, 1):
+                print(f"Factura {idx}:")
+                for key, val in factura.items():
+                    print(f"  {key}: {val}")
+                print("-" * 30)
+        else:
+            print("No se encontraron facturas con ese criterio.")
