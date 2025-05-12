@@ -1,4 +1,5 @@
-from datetime import date
+from datetime import date, datetime
+
 
 from data.program_data import usuarios, facturas_pendientes, validar_numero
 
@@ -52,6 +53,7 @@ def enviar_factura(usuario):
         'numero_factura': numero_factura,
         'proveedor': proveedor,
         'fecha_emision': fecha_emision,
+        'fecha_enviada': datetime.now().date(),
         'monto': monto,
         'moneda_utilizada': moneda_utilizada,
         'categoria': categoria,

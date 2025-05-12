@@ -1,8 +1,8 @@
-
+from datetime import datetime, date
 from authentication.login import iniciar_sesion, registrar_usuario
 from functions.user import mostrar_dashboard, enviar_factura, ver_saldo, gestionar_perfil
-from functions.admin import ver_facturas_pendientes, aprobar_facturas
-from data.program_data import usuarios, validar_numero
+from functions.admin import ver_facturas_pendientes, aprobar_facturas, tiempo_respuesta_promedio, mostrar_top_usuarios
+from data.program_data import usuarios, validar_numero, monto_total_pend
 
 
 def mostrar_menu():
@@ -10,7 +10,7 @@ def mostrar_menu():
     print("¡Bienvenido a la mejor aplicacion de viaticos de Guatemala!")
     print("1. Iniciar sesión")
     print("2. Registrarse")
-    print("3. Salir del programa") 
+    print("3. Salir del programa")
     
     return (validar_numero(input("Elige una opción: ")))
 
@@ -25,7 +25,7 @@ while True:
         if usuario:            
             if usuarios[usuario]['rol'] == 'usuario':
                 while True:
-                    print("\n1. Ver dashboard\n2. Enviar factura\n3. Ver saldo\n4. Gestionar perfil\n5. Cerrar sesión")
+                    print("\n1. Ver dashboard\n2. Enviar factura\n3. Ver saldo\n4. Gestionar perfil\n5. Mostrar monto total pendiente\n7. Cerrar sesión")
                     
                     op = validar_numero(input("Opción: "))
                     
@@ -36,15 +36,19 @@ while True:
                     elif op == 3:
                         ver_saldo(usuario)
                     elif op == 4:
-                        gestionar_perfil(usuario)
+                        saldo_pendiente(usuario)
                     elif op == 5:
+                        print("El monto pendiente es: Q", monto_total_pend(usuario))
+                    elif op == 6:
+                        gestionar_perfil(usuario)
+                    elif op == 7:
                         print("¡Gracias por usar el programa!")
                         break
                     else:
                         print("La opción escogida es incorrecta, vuelve a intentarlo.")
             else:
                 while True:
-                    print("\n 1. Ver las facturas pendientes \n 2.Procesar factura \n 3. Cerrar sesión")
+                    print("\n 1. Ver las facturas pendientes \n 2.Procesar factura \n 3. Estadísticas de tiempo de aprobación \n 4. Mostrar top usuarios \n 5. Cerrar sesión")
                     op = validar_numero(input("Opción: "))
                     
                     if op == 1:
@@ -52,6 +56,10 @@ while True:
                     elif op== 2:
                         aprobar_facturas()
                     elif op == 3:
+                        print("El tiempo de aprobación promedio es: ", tiempo_respuesta_promedio(), "dias")
+                    elif op == 4:
+                        mostrar_top_usuarios()
+                    elif op == 5:
                         print("¡Gracias por usar el programa!")
                         break
                     else:
