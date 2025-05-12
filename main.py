@@ -9,7 +9,10 @@ from functions.user import (
 from functions.admin import (
     ver_facturas_pendientes,
     aprobar_facturas,
-    buscar_facturas_interactivo_admin
+    buscar_facturas_interactivo_admin,
+    tiempo_respuesta_promedio,
+    mostrar_top_usuarios,
+    menu_visualizaciones
 )
 from data.program_data import usuarios, validar_numero
 from data.data_handler import cargar_datos, guardar_usuarios, guardar_facturas
@@ -63,7 +66,10 @@ while True:
                     print("\n1. Ver las facturas pendientes")
                     print("2. Procesar factura")
                     print("3. Buscar factura")
-                    print("4. Cerrar sesión")
+                    print("4. Estadísticas de tiempo de aprobación ")
+                    print("5. Mostrar top usuarios")
+                    print("6. Gráficas de las estadísticas importantes")
+                    print("7. Cerrar sesión")
 
                     op = validar_numero(input("Elige una opción: "))
                     
@@ -74,7 +80,13 @@ while True:
                     elif op == 3:
                         buscar_facturas_interactivo_admin()
                     elif op == 4:
-                        print("¡Gracias por usar el programa!")
+                        print("El tiempo de aprobación promedio es: ", tiempo_respuesta_promedio(), "dias")
+                    elif op == 5:
+                        mostrar_top_usuarios()
+                    elif op == 6:
+                        menu_visualizaciones()
+                    elif op == 7:
+                        print("Gracias por usar el programa crack.")
                         break
                     else:
                         print("La opción escogida es incorrecta, vuelve a intentarlo.")

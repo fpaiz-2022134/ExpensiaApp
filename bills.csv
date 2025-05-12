@@ -1,5 +1,4 @@
-usuario,numero_factura,proveedor,fecha_emision,monto,moneda_utilizada,categoria,descripcion,aprobada
-Edgar,111,expensia,2025-05-11,100.0,Q,transporte,pago bus,
-Edgar,222,MCdonalds,2025-05-11,45.0,q,Pago almuerzo,almuerzo,
-Prueba 1,1,compu,2025-05-11,1000.0,Q,electronico,Compra compu,
-Prueba 1,2,Intelaf,2025-05-11,10.0,cable usb,electronico,compra cable usb,
+usuario,numero_factura,proveedor,fecha_emision,monto,moneda_utilizada,categoria,descripcion,aprobada,fecha_aprobacion
+Edgar,222,MCdonalds,2025-05-11,45.0,q,Pago almuerzo,almuerzo,True,2025-05-11
+Prueba 1,1,compu,2025-05-11,1000.0,Q,electronico,Compra compu,True,2025-05-11
+Prueba 1,2,Intelaf,2025-05-11,10.0,cable usb,electronico,compra cable usb,,

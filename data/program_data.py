@@ -36,3 +36,12 @@ def calcular_promedio_saldo():
 
     promedio = total_saldo / num_usuarios
     print(f"\nEl promedio de saldo de todos los usuarios es: Q{promedio:.2f}")
+    
+    
+
+def monto_total_pend(usuario):
+    if usuario not in usuarios:  # Verificar si el usuario existe en el diccionario
+        return 0.0
+    if 'facturas' not in usuarios[usuario]:  # Verificar si el usuario tiene facturas
+        return 0.0
+    return sum(factura['monto'] for factura in usuarios[usuario]['facturas'] if factura.get('aprobada') is None)
