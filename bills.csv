@@ -1,14 +1,13 @@
 usuario,numero_factura,proveedor,fecha_emision,fecha_aprobacion,monto,moneda_utilizada,categoria,descripcion,aprobada
 edgar,101,Tigo,2025-05-01,2025-05-03,200.0,Q,servicios,Pago internet,True
-edgar,102,Energuate,2025-05-05,,300.0,Q,servicios,Pago electricidad,
 edgar,103,Uber,2025-05-10,2025-05-12,150.0,Q,transporte,viajes cliente,True
 edgar,104,Starbucks,2025-05-11,,45.0,Q,comida,reunión equipo,
 franco,201,Aerolineas,2025-04-20,2025-04-25,1200.0,Q,viajes,Boleto avión conferencia,True
-franco,202,Taxi,2025-05-10,,75.0,Q,transporte,traslado aeropuerto,
+franco,202,Taxi,2025-05-10,2025-05-12,75.0,Q,transporte,traslado aeropuerto,True
 franco,203,Restaurante,2025-04-15,2025-04-17,320.0,Q,comida,cena cliente,True
 julio,301,CompuShop,2025-04-15,2025-04-20,8500.0,Q,equipo,Laptop nuevo,True
 julio,302,Intelaf,2025-04-16,2025-04-18,250.0,Q,equipo,Disco duro externo,True
-julio,303,OfficeMax,2025-05-05,,120.0,Q,oficina,Suministros,
+julio,303,OfficeMax,2025-05-05,2025-05-12,120.0,Q,oficina,Suministros,True
 hector,401,Supermercado,2025-05-03,2025-05-05,480.0,Q,suministros,Despensa oficina,True
 hector,402,Farmacia,2025-05-07,,95.0,Q,salud,Botiquín,
 hector,403,Gasolinera,2025-04-28,2025-04-30,350.0,Q,transporte,Gasolina vehiculo,True

@@ -1,7 +1,7 @@
 from data.program_data import facturas_pendientes, usuarios
 from data.data_handler import guardar_usuarios, guardar_facturas
 import pandas as pd
-from datetime import date
+from datetime import date, datetime
 import numpy as np
 import matplotlib as plt
 
@@ -11,35 +11,14 @@ from graphics.visualizaciones import (
     graficar_tiempo_respuesta,
     graficar_top_usuarios
 )
-
 def ver_facturas_pendientes():
     print("\n --- Facturas Pendientes ---")
     for i, factura in enumerate(facturas_pendientes):
-        print(f"{i + 1}. Usuario: {factura['usuario']}, Categoría: {factura['categoria']}, Monto: Q{factura['monto']}, Aprobada: {factura['aprobada']}")
+        if factura.get('aprobada') is not True or False:
+            print(f"{i + 1}. Usuario: {factura['usuario']}, Categoría: {factura['categoria']}, Monto: Q{factura['monto']}, Aprobada: {factura['aprobada']}")
         
-        
-""" def aprobar_facturas():
-    ver_facturas_pendientes()
-    idx = int(input("¿Qué factura deseas procesar? Ingresa el número: ")) -1
-    
-    if 0 <= idx < len(facturas_pendientes):
-        factura = facturas_pendientes[idx]
-        decision = input("¿Deseas aprobar esta factura? s/n: ").lower()
-        
-        factura['aprobada'] = True if decision == 's' else False
-        
-        if factura['aprobada']:
-            usuarios[factura['usuario']]['saldo'] = factura['monto']
-            print("La factura ha sido aprobada exitosamente.")
-            print("Importante: Al usuario se le ha agregado el monto a su saldo.") 
-        else:
-            print("La factura ha sido denegada, no se le ha sumado saldo al usuario.")
-        
-        
-        facturas_pendientes.pop(idx)           
-    
-    else:
-        print("La factura escogida es inválida o no se encuentra registrada.") """
+"""         print(f"{i + 1}. Usuario: {factura['usuario']}, Categoría: {factura['categoria']}, Monto: Q{factura['monto']}, Aprobada: {factura['aprobada']}")
+ """        
         
         # Función para aprobar facturas
 def aprobar_facturas():
@@ -51,6 +30,7 @@ def aprobar_facturas():
         decision = input("¿Deseas aprobar esta factura? s/n: ").lower()
         
         factura['aprobada'] = True if decision == 's' else False
+        usuarios[factura['usuario']]['aprobada'] = True if decision == 's' else False
 
         if factura['aprobada']:
             # Agregar la fecha de aprobación
@@ -135,8 +115,9 @@ def tiempo_respuesta_promedio():
     for user_data in usuarios.values():
         if 'facturas' in user_data:
             for factura in user_data['facturas']:
-                if factura.get('aprobada') and factura.get('fecha_envio') and factura.get('fecha_aprobacion'):
-                    delta = factura['fecha_aprobacion'] - factura['fecha_envio']
+                if factura.get('aprobada') and factura.get('fecha_emision') and factura.get('fecha_aprobacion'):
+                    
+                    delta = factura['fecha_aprobacion'] - factura['fecha_emision']
                     tiempos.append(delta.days)
     
     return sum(tiempos)/len(tiempos) if tiempos else 0

@@ -15,7 +15,7 @@ from functions.admin import (
     menu_visualizaciones
 )
 from data.program_data import usuarios, validar_numero
-from data.data_handler import cargar_datos, guardar_usuarios, guardar_facturas
+from data.data_handler import cargar_datos
 
 cargar_datos()
 

@@ -79,28 +79,7 @@ def gestionar_perfil(usuario):
         perfil['correo'] = correo
         print("El perfil ha sido actualizado exitosamente.")
         guardar_usuarios()
-# ------------------------------
-#    CALCULAR PROMEDIO DE SALDO (PENDIENTE)
-# ------------------------------
-
-# Función para calcular el promedio de saldo de todos los usuarios
-""" def calcular_promedio_saldo():
-    total_saldo = 0
-    num_usuarios = len(usuarios)
-
-    if num_usuarios == 0:
-        print("No hay usuarios registrados.")
-        return
-
-    for usuario in usuarios.values():
-        total_saldo += usuario['saldo']
-
-    promedio = total_saldo / num_usuarios
-    print(f"\nEl promedio de saldo de todos los usuarios es: Q{promedio:.2f}")
-
-    # Calcular el promedio de saldo de todos los usuarios
-    calcular_promedio_saldo() """
-
+        
 # ------------------------------
 #    FUNCION PARA BUSCAR FACTURAS
 # ------------------------------

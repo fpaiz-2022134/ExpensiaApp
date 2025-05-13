@@ -2,6 +2,7 @@
 import matplotlib.pyplot as plt
 from data import program_data
 import numpy as np
+from datetime import datetime
 
 def graficar_tasa_aprobacion():
     """
@@ -79,11 +80,11 @@ def graficar_tiempo_respuesta():
         if 'facturas' in data:
             tiempos = []
             for factura in data['facturas']:
-                if factura.get('aprobada') and 'fecha_envio' in factura and 'fecha_aprobacion' in factura:
+                if factura.get('aprobada') and 'fecha_emision' in factura and 'fecha_aprobacion' in factura:
                     # Ya que las fechas están en formato ISO (YYYY-MM-DD)
-                    fecha_envio = factura['fecha_envio']
-                    fecha_aprob = factura['fecha_aprobacion']
-                    delta = (fecha_aprob - fecha_envio).days
+                    fecha_emision = datetime.strptime(factura['fecha_emision'], "%Y-%m-%d")
+                    fecha_aprob = datetime.strptime(factura['fecha_aprobacion'], "%Y-%m-%d")
+                    delta = (fecha_aprob - fecha_emision).days
                     tiempos.append(delta)
             
             if tiempos:
@@ -116,7 +117,7 @@ def graficar_top_usuarios():
     """
     Grafica el top 5 de usuarios por facturas enviadas y saldo utilizado
     """
-    # Top por facturas enviadas
+    
     usuarios_facturas = []
     num_facturas = []
     
@@ -130,7 +131,7 @@ def graficar_top_usuarios():
     usuarios_facturas_top = [usuarios_facturas[i] for i in indices_ordenados]
     num_facturas_top = [num_facturas[i] for i in indices_ordenados]
     
-    # Top por saldo utilizado
+    
     usuarios_saldo = []
     saldos = []
     
@@ -140,7 +141,7 @@ def graficar_top_usuarios():
             usuarios_saldo.append(usuario)
             saldos.append(saldo_total)
     
-    # Ordenar y tomar top 5
+    
     indices_ordenados_saldo = np.argsort(saldos)[::-1][:5]
     usuarios_saldo_top = [usuarios_saldo[i] for i in indices_ordenados_saldo]
     saldos_top = [saldos[i] for i in indices_ordenados_saldo]
@@ -155,7 +156,7 @@ def graficar_top_usuarios():
     ax1.set_ylabel('Número de Facturas')
     ax1.tick_params(axis='x', rotation=45)
     
-    # Añadir valores en las barras
+    
     for i, v in enumerate(num_facturas_top):
         ax1.text(i, v + 0.5, str(v), ha='center')
     
@@ -166,7 +167,7 @@ def graficar_top_usuarios():
     ax2.set_ylabel('Saldo Total (Q)')
     ax2.tick_params(axis='x', rotation=45)
     
-    # Añadir valores en las barras
+    
     for i, v in enumerate(saldos_top):
         ax2.text(i, v + 0.5, f'Q{v:.2f}', ha='center')
     
