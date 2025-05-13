@@ -15,10 +15,7 @@ def ver_facturas_pendientes():
     print("\n --- Facturas Pendientes ---")
     for i, factura in enumerate(facturas_pendientes):
         if factura.get('aprobada') is not True or False:
-            print(f"{i + 1}. Usuario: {factura['usuario']}, Categoría: {factura['categoria']}, Monto: Q{factura['monto']}, Aprobada: {factura['aprobada']}")
-        
-"""         print(f"{i + 1}. Usuario: {factura['usuario']}, Categoría: {factura['categoria']}, Monto: Q{factura['monto']}, Aprobada: {factura['aprobada']}")
- """        
+            print(f"{i + 1}. Número factura: {factura['numero_factura']} Usuario: {factura['usuario']}, Categoría: {factura['categoria']}, Monto: Q{factura['monto']}, Aprobada: {factura['aprobada']}")
         
         # Función para aprobar facturas
 def aprobar_facturas():
@@ -30,11 +27,18 @@ def aprobar_facturas():
         decision = input("¿Deseas aprobar esta factura? s/n: ").lower()
         
         factura['aprobada'] = True if decision == 's' else False
-        usuarios[factura['usuario']]['aprobada'] = True if decision == 's' else False
+        
+        if factura['aprobada']:
+            factura['fecha_aprobacion'] = date.today().isoformat()
+        
+        for f in usuarios[factura['usuario']]['facturas']:
+            if f['numero_factura'] == factura['numero_factura']:
+                f['aprobada'] = factura['aprobada']
+                if factura['aprobada']:
+                    f['fecha_aprobacion'] = factura['fecha_aprobacion']
+                break
 
         if factura['aprobada']:
-            # Agregar la fecha de aprobación
-            factura['fecha_aprobacion'] = date.today().isoformat()
             # Actualizar el saldo del usuario
             usuarios[factura['usuario']]['saldo'] += factura['monto']
             print(f"La factura ha sido aprobada exitosamente. Fecha de aprobación: {factura['fecha_aprobacion']}")
@@ -78,8 +82,8 @@ def buscar_facturas_interactivo_admin():
         print("\n        Buscar Factura       ")
         print("1. Buscar por número de factura")
         print("2. Buscar por usuario")
-        print("3. Buscar por estado")
-        print("4. Volver al menú principal")
+       # print("3. Buscar por estado")
+        print("3. Volver al menú principal")
 
         opcion = input("Seleccione una opción: ").strip()
 
@@ -89,13 +93,13 @@ def buscar_facturas_interactivo_admin():
         elif opcion == '2':
             criterio = 'usuario'
             valor = input("Ingrese el nombre de usuario: ").strip()
+        #elif opcion == '3':
+         #   criterio = 'estado'
+          #  valor = input("Ingrese el estado (aprobado, rechazado, pendiente): ").strip().lower()
+           # if valor not in ['aprobado', 'rechazado', 'pendiente']:
+            #    print("Estado no válido. Sólo puede ser 'aprobado', 'rechazado' o 'pendiente'.")
+             #   continue
         elif opcion == '3':
-            criterio = 'estado'
-            valor = input("Ingrese el estado (aprobado, rechazado, pendiente): ").strip().lower()
-            if valor not in ['aprobado', 'rechazado', 'pendiente']:
-                print("Estado no válido. Sólo puede ser 'aprobado', 'rechazado' o 'pendiente'.")
-                continue
-        elif opcion == '4':
             break
         else:
             print("Opción no válida. Intente nuevamente.")
@@ -116,8 +120,9 @@ def tiempo_respuesta_promedio():
         if 'facturas' in user_data:
             for factura in user_data['facturas']:
                 if factura.get('aprobada') and factura.get('fecha_emision') and factura.get('fecha_aprobacion'):
-                    
-                    delta = factura['fecha_aprobacion'] - factura['fecha_emision']
+                    fecha_emision = datetime.strptime(factura['fecha_emision'], "%Y-%m-%d")
+                    fecha_aprob = datetime.strptime(factura['fecha_aprobacion'], "%Y-%m-%d")
+                    delta = (fecha_aprob - fecha_emision)
                     tiempos.append(delta.days)
     
     return sum(tiempos)/len(tiempos) if tiempos else 0

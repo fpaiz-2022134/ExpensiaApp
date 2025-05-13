@@ -9,10 +9,10 @@ julio,301,CompuShop,2025-04-15,2025-04-20,8500.0,Q,equipo,Laptop nuevo,True
 julio,302,Intelaf,2025-04-16,2025-04-18,250.0,Q,equipo,Disco duro externo,True
 julio,303,OfficeMax,2025-05-05,2025-05-12,120.0,Q,oficina,Suministros,True
 hector,401,Supermercado,2025-05-03,2025-05-05,480.0,Q,suministros,Despensa oficina,True
-hector,402,Farmacia,2025-05-07,,95.0,Q,salud,Botiquín,
+hector,402,Farmacia,2025-05-07,2025-05-12,95.0,Q,salud,Botiquín,True
 hector,403,Gasolinera,2025-04-28,2025-04-30,350.0,Q,transporte,Gasolina vehiculo,True
 pablo,501,Hilton,2025-04-10,2025-04-12,1800.0,Q,hospedaje,Hotel conferencia,True
-pablo,502,Restaurante,2025-05-08,,220.0,Q,comida,Almuerzo cliente,
+pablo,502,Restaurante,2025-05-08,2025-05-12,220.0,Q,comida,Almuerzo cliente,True
 pablo,503,Imprenta,2025-05-02,2025-05-04,175.0,Q,marketing,Folletos promoción,True
 mario,601,McDonalds,2025-05-11,2025-05-13,65.0,Q,comida,Almuerzo equipo,True
 mario,602,Uber,2025-05-15,,90.0,Q,transporte,Reunión cliente,
