@@ -11,7 +11,7 @@ def menu_usuario():
 def mostrar_dashboard(usuario):
     print("------ FACTURAS ENVIADAS ----\n")
     for factura in usuarios[usuario]['facturas']:
-        print(f"Categoría: {factura['categoria']}, Monto: {factura['monto']}, Aprobada: {factura['aprobada']}")
+        print(f"Número factura: {factura['numero_factura']}Categoría: {factura['categoria']}, Monto: {factura['monto']}, Aprobada: {factura['aprobada']}")
 
 # Permite al usuario enviar una factura
 def enviar_factura(usuario):
@@ -79,28 +79,7 @@ def gestionar_perfil(usuario):
         perfil['correo'] = correo
         print("El perfil ha sido actualizado exitosamente.")
         guardar_usuarios()
-# ------------------------------
-#    CALCULAR PROMEDIO DE SALDO (PENDIENTE)
-# ------------------------------
-
-# Función para calcular el promedio de saldo de todos los usuarios
-""" def calcular_promedio_saldo():
-    total_saldo = 0
-    num_usuarios = len(usuarios)
-
-    if num_usuarios == 0:
-        print("No hay usuarios registrados.")
-        return
-
-    for usuario in usuarios.values():
-        total_saldo += usuario['saldo']
-
-    promedio = total_saldo / num_usuarios
-    print(f"\nEl promedio de saldo de todos los usuarios es: Q{promedio:.2f}")
-
-    # Calcular el promedio de saldo de todos los usuarios
-    calcular_promedio_saldo() """
-
+        
 # ------------------------------
 #    FUNCION PARA BUSCAR FACTURAS
 # ------------------------------
@@ -133,8 +112,8 @@ def buscar_facturas_interactivo(usuario_actual):
         print("\n------ Buscar Factura ------")
         print("Seleccione un criterio de búsqueda:")
         print("1. Número de factura")
-        print("2. Estado (aprobado, rechazado, pendiente)")
-        print("3. Volver al menú principal")
+       # print("2. Estado (aprobado, rechazado, pendiente)")
+        print("2. Volver al menú principal")
         
         opcion = input("Opción: ").strip()
 
@@ -142,14 +121,14 @@ def buscar_facturas_interactivo(usuario_actual):
             criterio = 'numero_factura'
             valor = input("Ingrese el número de factura: ").strip()
         
-        elif opcion == '2':
-            criterio = 'estado'
-            valor = input("Ingrese el estado (aprobado, rechazado, pendiente): ").strip().lower()
-            if valor not in ['aprobado', 'rechazado', 'pendiente']:
-                print("Estado no válido. Intente con 'aprobado', 'rechazado' o 'pendiente'.")
-                continue
+       # elif opcion == '2':
+        #    criterio = 'estado'
+         #   valor = input("Ingrese el estado (aprobado, rechazado, pendiente): ").strip().lower()
+          #  if valor not in ['aprobado', 'rechazado', 'pendiente']:
+           #     print("Estado no válido. Intente con 'aprobado', 'rechazado' o 'pendiente'.")
+            #    continue
 
-        elif opcion == '3':
+        elif opcion == '2':
             print("Regresando al menú principal...")
             break
 
