@@ -20,10 +20,8 @@ from data.program_data import usuarios
 from data.data_handler import cargar_datos
 
 def safe_rerun():
-    try:
-        st.experimental_rerun()
-    except AttributeError:
-        components.html("<script>window.location.reload();</script>")
+    st.rerun()
+
 
 # Cargar datos al inicio
 cargar_datos()

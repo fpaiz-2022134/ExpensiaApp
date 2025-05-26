@@ -26,6 +26,7 @@ def iniciar_sesion():
             st.info(f"Intentos fallidos: {st.session_state.intentos_fallidos}/{MAX_INTENTOS}")
             return None
 
+    
     return None
 
 def registrar_usuario():

@@ -2,83 +2,88 @@ from datetime import date
 from data.program_data import usuarios, facturas_pendientes, validar_numero
 from data.data_handler import guardar_usuarios, guardar_facturas
 import pandas as pd
+import streamlit as st
+
 
 # Menú principal para el usuario
 def menu_usuario():
-    print("         EXPENSIA         ")
+    st.title("         EXPENSIA         ")
 
 # Muestra el dashboard del usuario
 def mostrar_dashboard(usuario):
-    print("------ FACTURAS ENVIADAS ----\n")
-    for factura in usuarios[usuario]['facturas']:
-        print(f"Número factura: {factura['numero_factura']}Categoría: {factura['categoria']}, Monto: {factura['monto']}, Aprobada: {factura['aprobada']}")
-
-# Permite al usuario enviar una factura
+    st.subheader("------ FACTURAS ENVIADAS ----\n")
+    if usuarios[usuario]['facturas']:
+        for factura in usuarios[usuario]['facturas']:
+            st.markdown(f"""
+            **Número de factura:** {factura['numero_factura']}  
+            **Categoría:** {factura['categoria']}  
+            **Monto:** Q{factura['monto']}  
+            **Aprobada:** {factura['aprobada']}
+            ---
+            """)
+    else:
+        st.info("No hay facturas enviadas.")
+        
 def enviar_factura(usuario):
-    print("---- ENVIAR FACTURA")
-    print("A continuación, deberás ingresar distintos datos para un envío correcto...\n")
+    st.subheader("---- ENVIAR FACTURA")
+    st.write("A continuación, deberás ingresar distintos datos para un envío correcto...\n")
 
-    while True:
-        numero_factura = input("Número de factura: ")
-        if validar_numero(numero_factura):
-            numero_factura = int(numero_factura)
-            break
-        else:
-            print("El número de factura debe ser un número entero. Intenta de nuevo.")
 
-    proveedor = input("Nombre del proveedor: ")
-    fecha_emision = date.today().isoformat()
+    with st.form("form_factura"):
+        numero_factura = st.text_input("Número de factura")
+        proveedor = st.text_input("Nombre del proveedor")
+        monto = st.text_input("Monto")
+        moneda_utilizada = st.text_input("Moneda utilizada (Q)", value="Q")
+        categoria = st.text_input("Categoría del gasto (comida, transporte, etc)")
+        descripcion = st.text_area("Describe el gasto realizado")
+        submitted = st.form_submit_button("Enviar Factura")
 
-    while True:
-        monto = input("Monto: ")
-        if validar_numero(monto):
-            monto = float(monto)
-            break
-        else:
-            print("El monto debe ser un número válido. Intenta de nuevo.")
-
-    moneda_utilizada = input("Moneda utilizada (Q): ")
-    categoria = input("Ingresa la categoría del gasto realizado (comida, transporte, etc): ")
-    descripcion = input("Justifica tu respuesta anterior, describe el gasto realizado: ")
-    print("")
-
+        
+    if submitted:
+        if not validar_numero(numero_factura):
+            st.error("El número de factura debe ser un número entero.")
+            return
+        if not validar_numero(monto):
+            st.error("El monto debe ser un número válido.")
+            return
+    
     factura = {
-        'usuario': usuario,
-        'numero_factura': numero_factura,
-        'proveedor': proveedor,
-        'fecha_emision': fecha_emision,
-        'monto': monto,
-        'moneda_utilizada': moneda_utilizada,
-        'categoria': categoria,
-        'descripcion': descripcion,        
-        'aprobada': None
-    }
-
+            'usuario': usuario,
+            'numero_factura': int(numero_factura),
+            'proveedor': proveedor,
+            'fecha_emision': date.today().isoformat(),
+            'monto': float(monto),
+            'moneda_utilizada': moneda_utilizada,
+            'categoria': categoria,
+            'descripcion': descripcion,
+            'aprobada': None
+        }
+    
     usuarios[usuario]['facturas'].append(factura)
     facturas_pendientes.append(factura)
 
-    print("La factura fue enviada al administrador exitosamente.")
     guardar_usuarios()
     guardar_facturas()
 
-# Muestra el saldo disponible del usuario
+    st.success("La factura fue enviada al administrador exitosamente.")
+
+
 def ver_saldo(usuario):
     saldo = usuarios[usuario]['saldo']
-    print(f"\nSaldo disponible: Q{saldo:.2f}")
+    st.info(f"\nSaldo disponible: Q{saldo:.2f}")
 
-# Permite al usuario gestionar su perfil
 def gestionar_perfil(usuario):
-    print("\n--- Perfil de Usuario ---")
+    st.subheader("\n--- Perfil de Usuario ---")
     perfil = usuarios[usuario]['perfil']
 
-    continuar = input("\n¿Deseas editar los campos de tu perfil? (s/n): ")
-    if continuar.lower() == "s":
-        nombre = input("Nombre completo: ")
-        correo = input("Correo electrónico: ")
+    nombre = st.text_input("Nombre completo", value=perfil.get('nombre', ''))
+    correo = st.text_input("Correo electrónico", value=perfil.get('correo', ''))
+
+    if st.button("Actualizar Perfil"):
         perfil['nombre'] = nombre
         perfil['correo'] = correo
-        print("El perfil ha sido actualizado exitosamente.")
         guardar_usuarios()
+        st.success("Perfil actualizado exitosamente.")
         
 # ------------------------------
 #    FUNCION PARA BUSCAR FACTURAS
@@ -88,7 +93,7 @@ def buscar_facturas(criterio, valor, usuario_actual):
         df = pd.read_csv('bills.csv')
 
         if criterio not in df.columns:
-            print(f"Criterio '{criterio}' no encontrado en las columnas.")
+            st.error(f"Criterio '{criterio}' no encontrado en las columnas.")
             return []
 
         # Filtramos solo las facturas del usuario actual
@@ -100,50 +105,35 @@ def buscar_facturas(criterio, valor, usuario_actual):
         return coincidencias.to_dict('records')
 
     except FileNotFoundError:
-        print("El archivo 'bills.csv' no existe.")
+        st.error("El archivo 'bills.csv' no existe.")
         return []
 
     except Exception as e:
-        print(f"Error al buscar facturas: {e}")
+        st.error(f"Error al buscar facturas: {e}")
         return []
 
 def buscar_facturas_interactivo(usuario_actual):
-    while True:
-        print("\n------ Buscar Factura ------")
-        print("Seleccione un criterio de búsqueda:")
-        print("1. Número de factura")
-       # print("2. Estado (aprobado, rechazado, pendiente)")
-        print("2. Volver al menú principal")
-        
-        opcion = input("Opción: ").strip()
-
-        if opcion == '1':
-            criterio = 'numero_factura'
-            valor = input("Ingrese el número de factura: ").strip()
-        
-       # elif opcion == '2':
-        #    criterio = 'estado'
-         #   valor = input("Ingrese el estado (aprobado, rechazado, pendiente): ").strip().lower()
-          #  if valor not in ['aprobado', 'rechazado', 'pendiente']:
-           #     print("Estado no válido. Intente con 'aprobado', 'rechazado' o 'pendiente'.")
-            #    continue
-
-        elif opcion == '2':
-            print("Regresando al menú principal...")
-            break
-
-        else:
-            print("Opción no válida. Intente de nuevo.")
-            continue
-
-        # Buscar y mostrar resultados
+    
+    st.subheader("Buscar Factura")
+    opciones = {
+        "Núnmero de factura": "numero_factura"
+    }    
+    
+    opcion = st.selectbox("Selecciona un criterio de búsqueda:", list(opciones.keys()) )
+    valor = st.text_input("Ingrese el valor para buscar:")
+    
+    if st.button("Buscar"):
+        criterio = opciones[opcion]
         resultados = buscar_facturas(criterio, valor, usuario_actual)
+        
         if resultados:
-            print(f"\nSe encontraron {len(resultados)} factura(s):\n")
+            st.success(f"Se encontraron {len(resultados)} factura(s):")
             for idx, factura in enumerate(resultados, 1):
-                print(f"Factura {idx}:")
+                st.markdown(f"Factura {idx}:")
                 for key, val in factura.items():
-                    print(f"  {key}: {val}")
-                print("-" * 30)
+                    st.markdown(f"- {key}: {val}")
+                st.markdown("----")
         else:
-            print("No se encontraron facturas con ese criterio.")
+            st.warning("No se encontraron facturas con ese criterio.")
+    
+    
