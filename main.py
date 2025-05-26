@@ -1,3 +1,5 @@
+import streamlit as st
+import streamlit.components.v1 as components
 from authentication.login import iniciar_sesion, registrar_usuario
 from functions.user import (
     mostrar_dashboard,
@@ -14,87 +16,119 @@ from functions.admin import (
     mostrar_top_usuarios,
     menu_visualizaciones
 )
-from data.program_data import usuarios, validar_numero
+from data.program_data import usuarios
 from data.data_handler import cargar_datos
 
+# Función segura para recargar la página, compatible con Streamlit 1.45.1
+def safe_rerun():
+    try:
+        # Este es el método para forzar recarga en 1.45.1
+        st.session_state.update({})
+    except Exception:
+        # fallback con JavaScript
+        components.html("<script>window.location.reload();</script>", height=0)
+
+# Cargar datos al inicio
 cargar_datos()
 
-def mostrar_menu():
-    print("             EXPENSIA        ")
-    print("¡Bienvenido a la mejor aplicación de viáticos de Guatemala!")
-    print("1. Iniciar sesión")
-    print("2. Registrarse")
-    print("3. Salir del programa") 
-    
-    return validar_numero(input("Elige una opción: "))
+# Inicializar variables de sesión
+if 'usuario' not in st.session_state:
+    st.session_state.usuario = None
+if 'rol' not in st.session_state:
+    st.session_state.rol = None
+if 'pagina' not in st.session_state:
+    st.session_state.pagina = 'menu'
+if 'mostrar_registro' not in st.session_state:
+    st.session_state.mostrar_registro = False
 
-while True:
-    opcion = mostrar_menu()
-    
-    if opcion == 1:
+st.title("EXPENSIA")
+st.subheader("¡Bienvenido a la mejor aplicación de viáticos de Guatemala!")
+
+def logout():
+    st.session_state.usuario = None
+    st.session_state.rol = None
+    st.session_state.pagina = 'menu'
+
+# Menú principal
+if st.session_state.pagina == 'menu':
+    if not st.session_state.mostrar_registro:
+        st.subheader("Iniciar sesión")
         usuario = iniciar_sesion()
+        st.markdown("¿Nuevo usuario?")
+        if st.button("Registrarse", key="mostrar_registro_btn"):
+            st.session_state.mostrar_registro = True
 
-        if usuario:            
-            if usuarios[usuario]['rol'] == 'usuario':
-                while True:
-                    print("\n1. Ver dashboard")
-                    print("2. Enviar factura")
-                    print("3. Ver saldo")
-                    print("4. Gestionar perfil")
-                    print("5. Buscar factura")
-                    print("6. Cerrar sesión")
-                    
-                    op = validar_numero(input("Elige una opción: "))
-                    
-                    if op == 1:
-                        mostrar_dashboard(usuario)
-                    elif op == 2:
-                        enviar_factura(usuario)
-                    elif op == 3:
-                        ver_saldo(usuario)
-                    elif op == 4:
-                        gestionar_perfil(usuario)
-                    elif op == 5:
-                        buscar_facturas_usuario(usuario)
-                    elif op == 6:
-                        print("¡Gracias por usar el programa!")
-                        break
-                    else:
-                        print("La opción escogida es incorrecta, vuelve a intentarlo.")
-            else:  # Admin
-                while True:
-                    print("\n1. Ver las facturas pendientes")
-                    print("2. Procesar factura")
-                    print("3. Buscar factura")
-                    print("4. Estadísticas de tiempo de aprobación ")
-                    print("5. Mostrar top usuarios")
-                    print("6. Gráficas de las estadísticas importantes")
-                    print("7. Cerrar sesión")
+        if usuario:
+            st.success("Sesión iniciada correctamente.")
+            st.session_state.usuario = usuario
+            st.session_state.rol = usuarios[usuario]['rol']
+            st.session_state.pagina = 'usuario' if st.session_state.rol == 'usuario' else 'admin'
+            safe_rerun()
 
-                    op = validar_numero(input("Elige una opción: "))
-                    
-                    if op == 1:
-                        ver_facturas_pendientes()
-                    elif op == 2:
-                        aprobar_facturas()
-                    elif op == 3:
-                        buscar_facturas_interactivo_admin()
-                    elif op == 4:
-                        print("El tiempo de aprobación promedio es: ", tiempo_respuesta_promedio(), "dias")
-                    elif op == 5:
-                        mostrar_top_usuarios()
-                    elif op == 6:
-                        menu_visualizaciones()
-                    elif op == 7:
-                        print("Gracias por usar el programa crack.")
-                        break
-                    else:
-                        print("La opción escogida es incorrecta, vuelve a intentarlo.")
-                        
-    elif opcion == 2:
-        registrar_usuario()
-        
-    elif opcion == 3:
-        break
     else:
-        print("La opción escogida es incorrecta, vuelve a intentarlo.")
+        st.subheader("Registro de usuario")
+        registrado = registrar_usuario()
+
+        if registrado:
+            st.success("¡Registro exitoso! Ahora puedes iniciar sesión.")
+            st.session_state.mostrar_registro = False
+            safe_rerun()
+        else:
+            if st.button("Volver al login", key="volver_btn"):
+                st.session_state.mostrar_registro = False
+                safe_rerun()
+
+# Interfaz usuario
+elif st.session_state.pagina == 'usuario':
+    st.sidebar.title("Menú Usuario")
+    opcion = st.sidebar.selectbox("Opciones", [
+        "Ver dashboard",
+        "Enviar factura",
+        "Ver saldo",
+        "Gestionar perfil",
+        "Buscar factura",
+        "Cerrar sesión"
+    ])
+
+    if opcion == "Ver dashboard":
+        mostrar_dashboard(st.session_state.usuario)
+    elif opcion == "Enviar factura":
+        enviar_factura(st.session_state.usuario)
+    elif opcion == "Ver saldo":
+        ver_saldo(st.session_state.usuario)
+    elif opcion == "Gestionar perfil":
+        gestionar_perfil(st.session_state.usuario)
+    elif opcion == "Buscar factura":
+        buscar_facturas_usuario(st.session_state.usuario)
+    elif opcion == "Cerrar sesión":
+        logout()
+        safe_rerun()
+
+# Interfaz admin
+elif st.session_state.pagina == 'admin':
+    st.sidebar.title("Menú Administrador")
+    opcion = st.sidebar.selectbox("Opciones", [
+        "Ver facturas pendientes",
+        "Procesar factura",
+        "Buscar factura",
+        "Estadísticas de aprobación",
+        "Top usuarios",
+        "Visualizaciones gráficas",
+        "Cerrar sesión"
+    ])
+
+    if opcion == "Ver facturas pendientes":
+        ver_facturas_pendientes()
+    elif opcion == "Procesar factura":
+        aprobar_facturas()
+    elif opcion == "Buscar factura":
+        buscar_facturas_interactivo_admin()
+    elif opcion == "Estadísticas de aprobación":
+        st.write(f"El tiempo de aprobación promedio es: **{tiempo_respuesta_promedio()} días**")
+    elif opcion == "Top usuarios":
+        mostrar_top_usuarios()
+    elif opcion == "Visualizaciones gráficas":
+        menu_visualizaciones()
+    elif opcion == "Cerrar sesión":
+        logout()
+        safe_rerun()
