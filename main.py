@@ -19,14 +19,8 @@ from functions.admin import (
 from data.program_data import usuarios
 from data.data_handler import cargar_datos
 
-# Función segura para recargar la página, compatible con Streamlit 1.45.1
 def safe_rerun():
-    try:
-        # Este es el método para forzar recarga en 1.45.1
-        st.session_state.update({})
-    except Exception:
-        # fallback con JavaScript
-        components.html("<script>window.location.reload();</script>", height=0)
+    st.rerun()
 
 # Cargar datos al inicio
 cargar_datos()
