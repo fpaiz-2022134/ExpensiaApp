@@ -1,0 +1,4 @@
+__pycache__/  # Ignora la carpeta __pycache__ en cualquier parte del proyecto
+*.pyc         # Ignora todos los archivos .pyc (bytecode de Python)
+*.pyo         # (Opcional) Ignora archivos .pyo (optimizados)
+*.pyd         # (Opcional) Ignora archivos .pyd (específicos de Windows)
