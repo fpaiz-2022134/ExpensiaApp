@@ -19,14 +19,11 @@ from functions.admin import (
 from data.program_data import usuarios
 from data.data_handler import cargar_datos
 
-# Función segura para recargar la página, compatible con Streamlit 1.45.1
 def safe_rerun():
     try:
-        # Este es el método para forzar recarga en 1.45.1
-        st.session_state.update({})
-    except Exception:
-        # fallback con JavaScript
-        components.html("<script>window.location.reload();</script>", height=0)
+        st.experimental_rerun()
+    except AttributeError:
+        components.html("<script>window.location.reload();</script>")
 
 # Cargar datos al inicio
 cargar_datos()
@@ -72,11 +69,9 @@ if st.session_state.pagina == 'menu':
         if registrado:
             st.success("¡Registro exitoso! Ahora puedes iniciar sesión.")
             st.session_state.mostrar_registro = False
-            safe_rerun()
         else:
             if st.button("Volver al login", key="volver_btn"):
                 st.session_state.mostrar_registro = False
-                safe_rerun()
 
 # Interfaz usuario
 elif st.session_state.pagina == 'usuario':
@@ -124,7 +119,7 @@ elif st.session_state.pagina == 'admin':
     elif opcion == "Buscar factura":
         buscar_facturas_interactivo_admin()
     elif opcion == "Estadísticas de aprobación":
-        st.write(f"El tiempo de aprobación promedio es: **{tiempo_respuesta_promedio()} días**")
+        tiempo_respuesta_promedio()
     elif opcion == "Top usuarios":
         mostrar_top_usuarios()
     elif opcion == "Visualizaciones gráficas":
