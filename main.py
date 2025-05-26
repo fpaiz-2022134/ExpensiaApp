@@ -22,9 +22,11 @@ from data.data_handler import cargar_datos
 # Función segura para recargar la página, compatible con Streamlit 1.45.1
 def safe_rerun():
     try:
-        st.experimental_rerun()
-    except AttributeError:
-        components.html("<script>window.location.reload();</script>")
+        # Este es el método para forzar recarga en 1.45.1
+        st.session_state.update({})
+    except Exception:
+        # fallback con JavaScript
+        components.html("<script>window.location.reload();</script>", height=0)
 
 # Cargar datos al inicio
 cargar_datos()
@@ -36,6 +38,8 @@ if 'rol' not in st.session_state:
     st.session_state.rol = None
 if 'pagina' not in st.session_state:
     st.session_state.pagina = 'menu'
+if 'mostrar_registro' not in st.session_state:
+    st.session_state.mostrar_registro = False
 
 st.title("EXPENSIA")
 st.subheader("¡Bienvenido a la mejor aplicación de viáticos de Guatemala!")
@@ -47,10 +51,13 @@ def logout():
 
 # Menú principal
 if st.session_state.pagina == 'menu':
-    opcion = st.radio("Selecciona una opción:", ["Iniciar sesión", "Registrarse"])
-
-    if opcion == "Iniciar sesión":
+    if not st.session_state.mostrar_registro:
+        st.subheader("Iniciar sesión")
         usuario = iniciar_sesion()
+        st.markdown("¿Nuevo usuario?")
+        if st.button("Registrarse", key="mostrar_registro_btn"):
+            st.session_state.mostrar_registro = True
+
         if usuario:
             st.success("Sesión iniciada correctamente.")
             st.session_state.usuario = usuario
@@ -58,8 +65,18 @@ if st.session_state.pagina == 'menu':
             st.session_state.pagina = 'usuario' if st.session_state.rol == 'usuario' else 'admin'
             safe_rerun()
 
-    elif opcion == "Registrarse":
-        registrar_usuario()
+    else:
+        st.subheader("Registro de usuario")
+        registrado = registrar_usuario()
+
+        if registrado:
+            st.success("¡Registro exitoso! Ahora puedes iniciar sesión.")
+            st.session_state.mostrar_registro = False
+            safe_rerun()
+        else:
+            if st.button("Volver al login", key="volver_btn"):
+                st.session_state.mostrar_registro = False
+                safe_rerun()
 
 # Interfaz usuario
 elif st.session_state.pagina == 'usuario':

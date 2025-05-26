@@ -2,61 +2,70 @@ import streamlit as st
 from data import program_data
 from data.data_handler import guardar_usuarios
 
-# Inicializar estado de intentos fallidos
-if 'intentos_fallidos' not in st.session_state:
-    st.session_state.intentos_fallidos = 0
-
 MAX_INTENTOS = 5
 
 def iniciar_sesion():
-    st.subheader("Iniciar sesión")
-
     usuario = st.text_input("Nombre de usuario", key="login_usuario")
     contraseña = st.text_input("Contraseña", type="password", key="login_contraseña")
-    login_btn = st.button("Iniciar sesión")
+    iniciar_btn = st.button("Iniciar sesión", key="login_btn")
 
-    if login_btn:
+    if 'intentos_fallidos' not in st.session_state:
+        st.session_state.intentos_fallidos = 0
+
+    if iniciar_btn:
         if st.session_state.intentos_fallidos >= MAX_INTENTOS:
-            st.error("Demasiados intentos fallidos. Contacta a un administrador o IT.")
-            return
+            st.error("Demasiados intentos fallidos. Contacta a un administrador.")
+            return None
 
         if usuario in program_data.usuarios and program_data.usuarios[usuario]['contraseña'] == contraseña:
-            st.success("¡Inicio de sesión exitoso!")
             st.session_state.intentos_fallidos = 0
-            # Guardamos el usuario para que main.py lo detecte
-            st.session_state.usuario_actual = usuario
+            return usuario  # Login correcto, devuelve usuario
         else:
             st.session_state.intentos_fallidos += 1
             st.error("Usuario o contraseña incorrectos.")
             st.info(f"Intentos fallidos: {st.session_state.intentos_fallidos}/{MAX_INTENTOS}")
+            return None
+
+    return None
 
 def registrar_usuario():
-    st.subheader("Registro de usuario")
-
-    usuario = st.text_input("Elija su nombre de usuario", key="registro_usuario")
-    contraseña = st.text_input("Elija una contraseña", type="password", key="registro_contraseña")
-    rol = st.selectbox("Seleccione su rol", ['usuario', 'admin'], key="registro_rol")
-
+    # Para evitar título duplicado, NO poner subheader aquí
+    usuario = st.text_input("Nombre de usuario", key="registro_usuario")
+    contraseña = st.text_input("Contraseña", type="password", key="registro_contraseña")
+    repetir_contraseña = st.text_input("Repetir contraseña", type="password", key="registro_repetir")
+    rol = st.selectbox("Tipo de usuario", ["usuario", "admin"], key="registro_rol")
     clave_admin = ""
-    if rol == 'admin':
-        clave_admin = st.text_input("Ingrese la clave especial de administrador", type="password", key="registro_clave_admin")
+    if rol == "admin":
+        clave_admin = st.text_input("Clave admin", type="password", key="registro_clave_admin")
 
-    registrar_btn = st.button("Registrarse")
+    registrar_btn = st.button("Registrarse", key="registro_btn")
 
     if registrar_btn:
-        if usuario in program_data.usuarios:
-            st.warning("Este usuario ya existe. Intente con otro.")
-        else:
-            if rol == 'admin' and clave_admin != "clave123":
-                st.warning("Clave incorrecta. Será registrado como 'usuario'.")
-                rol = 'usuario'
+        if not usuario or not contraseña or not repetir_contraseña:
+            st.warning("Por favor, completa todos los campos.")
+            return False
 
-            program_data.usuarios[usuario] = {
-                'contraseña': contraseña,
-                'rol': rol,
-                'perfil': {},
-                'facturas': [],
-                'saldo': 0
-            }
-            guardar_usuarios()
-            st.success("¡Registro exitoso!")
+        if contraseña != repetir_contraseña:
+            st.warning("Las contraseñas no coinciden.")
+            return False
+
+        if usuario in program_data.usuarios:
+            st.warning("Este usuario ya existe. Intenta otro.")
+            return False
+
+        if rol == "admin" and clave_admin != "clave123":
+            st.warning("Clave admin incorrecta. Se registrará como 'usuario'.")
+            rol = "usuario"
+
+        # Guardar nuevo usuario
+        program_data.usuarios[usuario] = {
+            'contraseña': contraseña,
+            'rol': rol,
+            'perfil': {},
+            'facturas': [],
+            'saldo': 0
+        }
+        guardar_usuarios()
+        return True  # Registro exitoso
+
+    return False
