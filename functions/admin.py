@@ -21,6 +21,8 @@ def aprobar_facturas():
             decision = st.radio("¿Deseas aprobar esta factura?", ("Sí", "No"))
             
             factura['aprobada'] = True if decision == "Sí" else False
+            usuarios[factura['usuario']]['aprobada'] = True if decision == 'Sí' else False
+            
             if factura['aprobada']:
                 factura['fecha_aprobacion'] = date.today().isoformat()
             
@@ -37,9 +39,11 @@ def aprobar_facturas():
             else:
                 st.warning("La factura ha sido denegada, saldo no modificado.")
             
+
             guardar_usuarios()
             guardar_facturas()
             facturas_pendientes.pop(idx)
+            
         else:
             st.error("Número de factura inválido.")
 

@@ -25,7 +25,7 @@ def cargar_datos():
     if os.path.exists('bills.csv'):
         try:
             df_bills = pd.read_csv('bills.csv')
-            facturas_pendientes.extend(df_bills.to_dict('records'))
+            facturas_pendientes.extend([f for f in df_bills.to_dict('records') if f.get('aprobada') is None])
         except Exception as e:
             print(f"Error al cargar facturas: {e}")
 
