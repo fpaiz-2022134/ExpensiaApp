@@ -41,6 +41,7 @@ def enviar_factura(usuario):
         
     if submitted:
         if not validar_numero(numero_factura):
+            numero_factura= int(numero_factura)
             st.error("El número de factura debe ser un número entero.")
             return
         if not validar_numero(monto):
@@ -49,7 +50,7 @@ def enviar_factura(usuario):
     
     factura = {
             'usuario': usuario,
-            'numero_factura': int(numero_factura),
+            'numero_factura': numero_factura,
             'proveedor': proveedor,
             'fecha_emision': date.today().isoformat(),
             'monto': float(monto),

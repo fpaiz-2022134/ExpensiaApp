@@ -49,6 +49,7 @@ if st.session_state.pagina == 'menu':
     if not st.session_state.mostrar_registro:
         st.subheader("Iniciar sesión")
         usuario = iniciar_sesion()
+        print(usuario)
         st.markdown("¿Nuevo usuario?")
         if st.button("Registrarse", key="mostrar_registro_btn"):
             st.session_state.mostrar_registro = True

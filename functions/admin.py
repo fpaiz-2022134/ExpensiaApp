@@ -12,50 +12,69 @@ def ver_facturas_pendientes():
             st.write(f"{i + 1}. Número factura: {factura['numero_factura']} | Usuario: {factura['usuario']} | Categoría: {factura['categoria']} | Monto: Q{factura['monto']} | Aprobada: {factura['aprobada']}")
 
 def aprobar_facturas():
+    """Interfaz Streamlit para aprobar facturas"""
     ver_facturas_pendientes()
-    idx = st.number_input("Número de factura a procesar", min_value=1, max_value=len(facturas_pendientes), step=1) - 1
     
-    if st.button("Procesar factura"):
-        if 0 <= idx < len(facturas_pendientes):
-            factura = facturas_pendientes[idx]
-            decision = st.radio("¿Deseas aprobar esta factura?", ("Sí", "No"))
-            
-            factura['aprobada'] = True if decision == "Sí" else False
-            if factura['aprobada']:
-                factura['fecha_aprobacion'] = date.today().isoformat()
-            
-            for f in usuarios[factura['usuario']]['facturas']:
-                if f['numero_factura'] == factura['numero_factura']:
-                    f['aprobada'] = factura['aprobada']
-                    if factura['aprobada']:
-                        f['fecha_aprobacion'] = factura['fecha_aprobacion']
-                    break
-
-            if factura['aprobada']:
-                usuarios[factura['usuario']]['saldo'] += factura['monto']
-                st.success(f"La factura ha sido aprobada. Fecha de aprobación: {factura['fecha_aprobacion']}. Saldo actualizado.")
-            else:
-                st.warning("La factura ha sido denegada, saldo no modificado.")
-            
-            guardar_usuarios()
-            guardar_facturas()
-            facturas_pendientes.pop(idx)
+    if not facturas_pendientes:
+        return
+    
+    # Selección de factura
+    facturas_lista = [f"{i+1}. {f['proveedor']} (Q{f['monto']})" 
+                     for i, f in enumerate(facturas_pendientes)]
+    seleccion = st.selectbox("Seleccione la factura a procesar:", facturas_lista)
+    idx = facturas_lista.index(seleccion)
+    
+    # Mostrar detalles de la factura seleccionada
+    factura = facturas_pendientes[idx]
+    with st.container(border=True):
+        st.subheader(f"Procesando Factura #{idx+1}")
+        st.write(f"**Usuario:** {factura['usuario']}")
+        st.write(f"**Proveedor:** {factura['proveedor']}")
+        st.write(f"**Monto:** Q{factura['monto']}")
+        st.write(f"**Categoría:** {factura['categoria']}")
+        st.write(f"**Descripción:** {factura['descripcion']}")
+    
+    # Proceso de aprobación
+    decision = st.radio("Decisión:", ["Aprobar", "Rechazar"], horizontal=True)
+    
+    if st.button("Confirmar decisión", type="primary"):
+        factura['aprobada'] = decision == "Aprobar"
+        
+        if factura['aprobada']:
+            factura['fecha_aprobacion'] = date.today().isoformat()
+            usuarios[factura['usuario']]['saldo'] += factura['monto']
+            st.success("✅ Factura aprobada y saldo actualizado")
         else:
-            st.error("Número de factura inválido.")
+            st.warning("❌ Factura rechazada")
+        
+        # Actualizar en el usuario
+        for f in usuarios[factura['usuario']]['facturas']:
+            if f['numero_factura'] == factura['numero_factura']:
+                f['aprobada'] = factura['aprobada']
+                if factura['aprobada']:
+                    f['fecha_aprobacion'] = factura['fecha_aprobacion']
+                break
+        
+        # Guardar cambios
+        guardar_usuarios()
+        guardar_facturas()
+        
+        # Eliminar de pendientes (se actualizó en guardar_facturas())
+        facturas_pendientes.pop(idx)
+        st.rerun()
 
 def buscar_facturas(criterio, valor):
     try:
-        df = pd.read_csv('bills.csv')
+        # Leer de total_bills.csv en lugar de bills.csv
+        df = pd.read_csv('total_bills.csv')
         if criterio not in df.columns:
-            st.error(f"Criterio '{criterio}' no encontrado en las columnas.")
+            st.error(f"Criterio '{criterio}' no encontrado.")
             return []
+
         coincidencias = df[df[criterio].astype(str).str.lower() == str(valor).lower()]
         return coincidencias.to_dict('records')
-    except FileNotFoundError:
-        st.error("El archivo 'bills.csv' no existe.")
-        return []
     except Exception as e:
-        st.error(f"Error al buscar facturas: {e}")
+        st.error(f"Error al buscar: {e}")
         return []
 
 def buscar_facturas_interactivo_admin():
