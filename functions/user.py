@@ -11,18 +11,74 @@ def menu_usuario():
 
 # Muestra el dashboard del usuario
 def mostrar_dashboard(usuario):
-    st.subheader("------ FACTURAS ENVIADAS ----\n")
-    if usuarios[usuario]['facturas']:
-        for factura in usuarios[usuario]['facturas']:
-            st.markdown(f"""
-            **Número de factura:** {factura['numero_factura']}  
-            **Categoría:** {factura['categoria']}  
-            **Monto:** Q{factura['monto']}  
-            **Aprobada:** {factura['aprobada']}
-            ---
-            """)
-    else:
-        st.info("No hay facturas enviadas.")
+    facturas = usuarios.get(usuario, {}).get('facturas', [])
+    total_facturas = len(facturas) if facturas else 0
+
+    st.markdown("""
+    <style>
+        .dashboard-container {
+            max-width: 600px;
+            margin: 40px auto;
+            font-family: sans-serif;
+            text-align: center;
+            color: #333;
+        }
+        .metric-card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 250px;
+            margin: 0 auto 30px;
+        }
+        .metric-number {
+            font-size: 64px;
+            font-weight: bold;
+            color: #0078d7;
+            margin: 20px 0 10px;
+        }
+        .metric-label {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            color: #555;
+        }
+        div.stButton > button {
+            background-color: #0078d7;
+            color: white;
+            border-radius: 20px;
+            padding: 12px 30px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+            margin: 0 auto;
+            display: block;
+        }
+        div.stButton > button:hover {
+            background-color: #005a9e;
+        }
+    </style>
+    """, unsafe_allow_html=True)
+
+    st.markdown("<div class='dashboard-container'>", unsafe_allow_html=True)
+    st.markdown(f"""
+        <div>
+                <center>
+            <h1>Hola, {usuario} 👋</h1>
+            <p>Bienvenido a tu panel de control en EXPENSIA</p>
+        </div>
+        <div class='metric-card'>
+            <p class='metric-number'>{total_facturas}</p>
+            <p class='metric-label'>Facturas Enviadas</p>
+            </center>
+        </div>
+    """, unsafe_allow_html=True)
+
+
+    st.markdown("</div>", unsafe_allow_html=True)
+
+
         
 def enviar_factura(usuario):
     st.subheader("---- ENVIAR FACTURA")

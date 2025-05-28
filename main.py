@@ -36,9 +36,6 @@ if 'pagina' not in st.session_state:
 if 'mostrar_registro' not in st.session_state:
     st.session_state.mostrar_registro = False
 
-st.title("EXPENSIA")
-st.subheader("¡Bienvenido a la mejor aplicación de viáticos de Guatemala!")
-
 def logout():
     st.session_state.usuario = None
     st.session_state.rol = None
@@ -46,31 +43,48 @@ def logout():
 
 # Menú principal
 if st.session_state.pagina == 'menu':
+    with st.container():
+        st.markdown(
+            """
+            <div style='text-align: center;'>
+                <h1 style='color:#4CAF50;'>EXPENSIA</h1>
+                <h4>¡Bienvenido a la mejor aplicación de viáticos de Guatemala!</h4>
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+    st.markdown("---")
+
     if not st.session_state.mostrar_registro:
-        st.subheader("Iniciar sesión")
+        st.markdown("### <center>Iniciar sesión:", unsafe_allow_html=True)
+
         usuario = iniciar_sesion()
-        print(usuario)
-        st.markdown("¿Nuevo usuario?")
-        if st.button("Registrarse", key="mostrar_registro_btn"):
+
+        st.markdown("¿Primera vez? Regístrate abajo")
+        if st.button("Crear cuenta nueva", key="mostrar_registro_btn"):
             st.session_state.mostrar_registro = True
 
         if usuario:
-            st.success("Sesión iniciada correctamente.")
+            st.success(f"¡Bienvenido, {usuario}!")
             st.session_state.usuario = usuario
             st.session_state.rol = usuarios[usuario]['rol']
             st.session_state.pagina = 'usuario' if st.session_state.rol == 'usuario' else 'admin'
             safe_rerun()
 
     else:
-        st.subheader("Registro de usuario")
+        st.markdown("### Registro de nuevo usuario")
+
         registrado = registrar_usuario()
 
         if registrado:
-            st.success("¡Registro exitoso! Ahora puedes iniciar sesión.")
+            st.success("¡Registro exitoso! Ya puedes iniciar sesión.")
             st.session_state.mostrar_registro = False
         else:
-            if st.button("Volver al login", key="volver_btn"):
+            st.info("¿Ya tienes cuenta?")
+            if st.button(" Volver al login", key="volver_btn"):
                 st.session_state.mostrar_registro = False
+
 
 # Interfaz usuario
 elif st.session_state.pagina == 'usuario':
